@@ -1,0 +1,99 @@
+version: '3.4'
+
+services:
+  db:
+    container_name: db
+    image: postgres:14
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=1234 
+      - POSTGRES_USER=postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "54321:5432"
+    hostname: db
+  rabbitmq: # login guest:guest
+    image: rabbitmq:3-management
+    hostname: "rabbitmq"
+    labels:
+      NAME: "rabbitmq"
+    ports:
+      #it for ui
+      - "15672:15672"
+      #it for client 
+      - "5672:5672"
+  payment.api:
+    container_name: payment.api
+    image: ${DOCKER_REGISTRY-}paymentapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    ports:
+      - "5004:80"
+    build:
+      context: .
+      dockerfile: PaymentAPI/Dockerfile
+  auth.api:
+    container_name: auth.api
+    image: ${DOCKER_REGISTRY-}authapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    ports:
+      - "5003:80"
+    build:
+      context: .
+      dockerfile: AuthAPI/Dockerfile
+  user.api:
+    image: ${DOCKER_REGISTRY-}userapi
+    container_name: user.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    ports:
+      - "5000:80"
+    build:
+      context: .
+      dockerfile: UserAPI/Dockerfile
+  article.api:
+    image: ${DOCKER_REGISTRY-}articleapi
+    container_name: article.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false
+    ports:
+      - "5001:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${APPDATA}/.aws/credentials:/root/.aws/credentials:ro
+    build:
+      context: .
+      dockerfile: ArticleAPI/Dockerfile
+  gateway.api:
+    image: ${DOCKER_REGISTRY-}gatewayapi
+    container_name: gateway.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - OCELOT.SETTINGS=ocelot.json
+      - DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false
+    ports:
+      - "5002:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    build:
+      context: .
+      dockerfile: Gateway/Dockerfile
+volumes:
+  db-data:
