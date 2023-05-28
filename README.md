@@ -1,5 +1,5 @@
 To start project you will need provide this json into user secrets
-`
+```
 {
   "Kestrel:Certificates:Development:Password": "xxxx",
   "AWSCredentials": {
@@ -32,7 +32,7 @@ To start project you will need provide this json into user secrets
     "Token": "xxxx"
   }
 }
-`
+```
 **xxxx -  mean, that you need provide your own values
 **MonthlyPriceId & YearlyPriceId - it's created product, so to test this functionality you will also create some product in STRIPE to test it
 If you encounter with "database "Article API" does not exist", just disable in first start lines:
