@@ -95,10 +95,10 @@ public class ArticleRepository : BaseRepository<Article>, IArticleRepository
 
         return await _dbSet
             .AsNoTracking()
-            .Include(x => x.ArticleVersions)
+            .Include(x => x.ArticleVersions)!
             .ThenInclude(x => x.ArticleVersionImages)
             .Include(x => x.Images)
-            .Where(x => x.DeletedAt.Value.Date == date && x.IsDeleted)
+            .Where(x => x.DeletedAt!.Value.Date == date && x.IsDeleted)
             .ToListAsync();
     }
 

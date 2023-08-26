@@ -1,6 +1,8 @@
-﻿using ArticleAPI.Data.Entities;
+﻿using ArticleAPI.Abstraction.Interfaces;
+using ArticleAPI.Data.Entities;
 using ArticleAPI.Data.Repositories.Interfaces;
 using ArticleAPI.Services.Interfaces;
+using Dapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -19,25 +21,39 @@ public class AddLikeToArticleCommandHandler : IRequestHandler<AddLikeToArticleCo
     private readonly IArticleRepository _articleRepository;
     private readonly IArticleLikeRepository _articleLikeRepository;
     private readonly ICurrentUserService _currentUserService;
+    private readonly ISqlConnectionFactory _sqlConnectionFactory;
     private readonly IUserRepository _userRepository;
     private readonly IMemoryCache _memoryCache;
 
     public AddLikeToArticleCommandHandler(IArticleRepository articleRepository,
         IArticleLikeRepository articleLikeRepository, IUserRepository userRepository,
-        ICurrentUserService currentUserService, IMemoryCache memoryCache)
+        ICurrentUserService currentUserService, IMemoryCache memoryCache, ISqlConnectionFactory sqlConnectionFactory)
     {
         _articleRepository = articleRepository;
         _articleLikeRepository = articleLikeRepository;
         _userRepository = userRepository;
         _currentUserService = currentUserService;
         _memoryCache = memoryCache;
+        _sqlConnectionFactory = sqlConnectionFactory;
     }
 
-    public async Task<Unit> Handle(AddLikeToArticleCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle( AddLikeToArticleCommand request,
+                                    CancellationToken cancellationToken)
     {
         var userId = _currentUserService.GetCurrentUserId();
-        var user = await _userRepository.GetByIdAsync(userId)
+        // let's try to use here dapper instead of ef core
+        // TODO: add sqlConnectionFactory to DI container
+        await using var sqlConnection = _sqlConnectionFactory.CreateConnection();
+        var user = await sqlConnection
+                       .QueryFirstOrDefaultAsync<User>(
+                           @"SELECT * FROM Users WHERE Id = @UserId", 
+                           new
+                           {
+                               request.UserId
+                           })
                    ?? throw new Exception("User not found");
+        // var user = await _userRepository.GetByIdAsync(userId)
+        //            ?? throw new Exception("User not found");
         var article = await _articleRepository.GetByIdWithIncludedDataAsync(request.ArticleId,
                           q => q.Include(x => x.Likes)
                               .Include(x => x.Channel))
