@@ -41,3 +41,22 @@ If you encounter with *"database Article API does not exist"*, just disable in f
 ___
 # after successful start return this lines.
 # After all this configuring project must be working.
+
+# Short summary for project
+```
+Developed a microservice-based application for article management using the
+.NET.
+Utilized RabbitMQ as the message broker for asynchronous communication
+between microservices.
+Implemented MassTransit as the messaging library to facilitate message-based
+communication.
+Leveraged C# and ASP.NET Core for the back-end development of the
+microservice.
+Utilized Entity Framework Core as the ORM (Object-Relational Mapping) tool for
+database operations.
+Integrated PostgreSQL as the main relational database
+Integrated Amazon S3 for storing and managing images and article text
+Utilized the Stripe API for subscription processing.
+Implemented 2FA with SendGrid and Twilio APIs
+For Background Jobs utilized Hangfire library
+```
