@@ -43,7 +43,7 @@ ___
 # After all this configuring project must be working.
 
 # Short summary for project
-```
+
 * Developed a microservice-based application for article management using the
 .NET.
 * Utilized RabbitMQ as the message broker for asynchronous communication
@@ -59,4 +59,3 @@ database operations.
 * Utilized the Stripe API for subscription processing.
 *Implemented 2FA with SendGrid and Twilio APIs
 * For Background Jobs utilized Hangfire library
-```
