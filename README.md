@@ -44,19 +44,19 @@ ___
 
 # Short summary for project
 ```
-Developed a microservice-based application for article management using the
+* Developed a microservice-based application for article management using the
 .NET.
-Utilized RabbitMQ as the message broker for asynchronous communication
-between microservices.
-Implemented MassTransit as the messaging library to facilitate message-based
+* Utilized RabbitMQ as the message broker for asynchronous communication
+* between microservices.
+* Implemented MassTransit as the messaging library to facilitate message-based
 communication.
-Leveraged C# and ASP.NET Core for the back-end development of the
+* Leveraged C# and ASP.NET Core for the back-end development of the
 microservice.
-Utilized Entity Framework Core as the ORM (Object-Relational Mapping) tool for
+* Utilized Entity Framework Core as the ORM (Object-Relational Mapping) tool for
 database operations.
-Integrated PostgreSQL as the main relational database
-Integrated Amazon S3 for storing and managing images and article text
-Utilized the Stripe API for subscription processing.
-Implemented 2FA with SendGrid and Twilio APIs
-For Background Jobs utilized Hangfire library
+* Integrated PostgreSQL as the main relational database
+*Integrated Amazon S3 for storing and managing images and article text
+* Utilized the Stripe API for subscription processing.
+*Implemented 2FA with SendGrid and Twilio APIs
+* For Background Jobs utilized Hangfire library
 ```
